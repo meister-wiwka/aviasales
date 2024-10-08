@@ -1,0 +1,37 @@
+.buttons {
+    display: flex;
+  
+    &__item {
+      width: 100%;
+      color: #4a4a4a;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+  
+      padding: 15px;
+      background: white;
+      cursor: pointer;
+      border: 1px solid #dfe5ec;
+  
+      &--first {
+        border-right: none;
+        border-radius: 5px 0 0 5px;
+      }
+      &--last {
+        border-left: none;
+        border-radius: 0 5px 5px 0;
+      }
+      &--single {
+        border-radius: 5px;
+      }
+      &--active {
+        background: #2196f3;
+        border-color: #2196f3;
+  
+        color: #ffffff;
+      }
+    }
+  }
+  

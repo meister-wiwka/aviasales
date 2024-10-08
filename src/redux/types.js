@@ -1,0 +1,13 @@
+export const ERROR_DETECT = 'ERROR_DETECT';
+
+export const LOAD_MORE = 'LOAD_MORE';
+
+export const CHANGE_FILTERS_LIST = 'CHANGE_FILTERS_LIST';
+
+export const CHANGE_SORT_TYPE = 'CHANGE_SORT_TYPE';
+
+export const TICKETS_LOAD = 'TICKETS_LOAD';
+
+export const GET_TICKETS_PACK = 'GET_TICKETS_PACK';
+
+export const GET_SEARCH_ID = 'GET_SEARCH_ID';

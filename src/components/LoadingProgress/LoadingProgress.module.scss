@@ -1,0 +1,18 @@
+.wrapper {
+    position: absolute;
+    top: 156px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  
+    .loading-progress {
+      position: static !important;
+    }
+  
+    span {
+      height: 17px;
+    }
+  }
+  

@@ -1,0 +1,43 @@
+.tickets-sorter {
+    &__list {
+      border-radius: 5px;
+  
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+    }
+    &__item {
+      flex: 1;
+    }
+    &__button {
+      width: 100%;
+  
+      color: #4a4a4a;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+  
+      padding: 15px;
+      background: white;
+      cursor: pointer;
+      border: 1px solid #dfe5ec;
+  
+      &--cheapest {
+        border-right: none;
+        border-radius: 5px 0 0 5px;
+      }
+      &--optimal {
+        border-left: none;
+        border-radius: 0 5px 5px 0;
+      }
+      &--active {
+        border-color: #2196f3;
+        background: #2196f3;
+        color: #ffffff;
+      }
+    }
+  }
+  

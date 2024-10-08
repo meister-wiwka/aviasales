@@ -1,0 +1,47 @@
+.filter {
+    padding-bottom: 10px;
+    background: #ffffff;
+    border-radius: 5px;
+  
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  
+    &__title {
+      margin: 0;
+      padding: 20px;
+    }
+    &__list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+  
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  
+  .check {
+    display: block;
+  
+    padding: 10px 20px;
+    padding-left: 50px;
+  
+    line-height: 20px;
+  
+    &__input {
+      position: absolute;
+      appearance: none;
+    }
+  
+    &__box {
+      position: absolute;
+      margin-left: -30px;
+      width: 20px;
+      height: 20px;
+      background: url(../../images/off.svg);
+    }
+  
+    &__input:checked + &__box {
+      background: url(../../images/on.svg);
+    }
+  }
+  
