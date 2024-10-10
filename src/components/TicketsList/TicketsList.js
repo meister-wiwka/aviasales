@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -18,72 +18,50 @@ const TicketsList = () => {
   const sortType = useSelector((state) => state.sortType);
   const filters = useSelector((state) => state.filtersList);
   const visualisedCounter = useSelector((state) => state.visualisedCounter);
-  const [transformFilters, setTransformFilters] = useState([]);
 
   useEffect(() => {
     if (!searchId) {
       dispatch(getSearchId());
-    } else if (isLoading) {
-      dispatch(getTickets(searchId));
     }
-  }, [dispatch, isLoading, searchId, tickets]);
+  }, [dispatch, searchId]);
 
   useEffect(() => {
-    setTransformFilters(
-      filters.reduce((total, filter) => {
-        if (filter.selected && filter.name !== 'all') {
-          total.push(Number(filter.name));
-        }
-        return total;
-      }, [])
-    );
-  }, [filters]);
+    if (searchId && isLoading) {
+      dispatch(getTickets(searchId));
+    }
+  }, [dispatch, isLoading, searchId]);
 
-  const sortingList = (arr, sortType) => {
+  const anyFilterSelected = filters.some(filter => filter.selected && filter.name !== 'all');
+
+  const sortedList = (tickets || []).map((ticket) => {
+    const transformedTicket = { ...ticket, id: uuidv4() };
+    transformedTicket.totalTime = transformedTicket.segments.reduce((total, { duration }) => total + duration, 0);
+    transformedTicket.optimalValue = transformedTicket.totalTime + transformedTicket.price;
+    transformedTicket.stops = Math.max(transformedTicket.segments[0].stops.length, transformedTicket.segments[1].stops.length);
+    return transformedTicket;
+  }).sort((prev, next) => {
     switch (sortType) {
       case 'cheapest':
-        return arr.sort((prev, next) => prev.price - next.price);
+        return prev.price - next.price;
       case 'fastest':
-        return arr.sort((prev, next) => prev.totalTime - next.totalTime);
+        return prev.totalTime - next.totalTime;
       case 'optimal':
-        return arr.sort((prev, next) => prev.optimalValue - next.optimalValue);
+        return prev.optimalValue - next.optimalValue;
       default:
-        return arr;
+        return 0;
     }
-  };
-
-  const transformTickets = tickets.map((ticket) => {
-    ticket.id = uuidv4();
-    ticket.totalTime = ticket.segments.reduce((total, { duration }) => total + duration, 0);
-    ticket.optimalValue = ticket.totalTime + ticket.price;
-    ticket.stops = Math.max(ticket.segments[0].stops.length, ticket.segments[1].stops.length);
-
-    return ticket;
-  });
-
-  const filteredTickets = transformTickets.reduce((res, ticket) => {
-    if (transformFilters.includes(ticket.stops)) {
-      res.push(ticket);
-    }
-    return res;
-  }, []);
-
-  const sortedList = sortingList(filteredTickets, sortType)
-    .slice(0, visualisedCounter)
-    .map((ticket) => {
-      return (
-        <li key={ticket.id}>
-          <Ticket ticket={ticket} />
-        </li>
-      );
-    });
+  }).filter(ticket => filters.some(filter => filter.selected && filter.name === String(ticket.stops))).slice(0, visualisedCounter).map((ticket) => (
+    <li key={ticket.id}>
+      <Ticket ticket={ticket} />
+    </li>
+  ));
 
   return error ? (
     <ErrorMessage message={error.message} />
   ) : (
     <>
       <ul className={classes['tickets-list']}>{sortedList}</ul>
-      {filteredTickets.length > visualisedCounter ? (
+      {anyFilterSelected && (tickets || []).length > visualisedCounter ? (
         <Buttons buttons={[{ name: 'load', label: 'Загрузить еще 5 билетов' }]} />
       ) : null}
       {sortedList.length === 0 ? (

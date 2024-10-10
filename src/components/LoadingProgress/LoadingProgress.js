@@ -11,7 +11,17 @@ const LoadingProgress = () => {
 
   useEffect(() => {
     if (isLoading) {
-      setProgress(tickets.length / 100);
+      const intervalId = setInterval(() => {
+        setProgress((prevProgress) => {
+          const newProgress = prevProgress + 1;
+          if (newProgress >= 100) {
+            clearInterval(intervalId);
+            return 100;
+          }
+          return newProgress;
+        });
+      }, 100);
+      return () => clearInterval(intervalId);
     } else {
       setProgress(100);
     }

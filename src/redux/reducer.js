@@ -27,7 +27,7 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case ERROR_DETECT:
-      return { ...state, error: action.payload };
+      return { ...state, error: action.payload, isLoading: false };
     case LOAD_MORE:
       return { ...state, visualisedCounter: action.payload };
     case CHANGE_FILTERS_LIST:
@@ -35,9 +35,9 @@ const reducer = (state = initialState, action) => {
     case CHANGE_SORT_TYPE:
       return { ...state, sortType: action.payload };
     case TICKETS_LOAD:
-      return { ...state, isLoading: !state.isLoading };
+      return { ...state, isLoading: false };
     case GET_TICKETS_PACK:
-      return { ...state, tickets: [...state.tickets, ...action.payload] };
+      return { ...state, tickets: [...state.tickets, ...action.payload], isLoading: false };
     case GET_SEARCH_ID:
       return { ...state, searchId: action.payload };
     default:
