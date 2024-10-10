@@ -1,5 +1,4 @@
 import aviasalesService from '../services/AviasalesService';
-
 import {
   ERROR_DETECT,
   LOAD_MORE,
@@ -44,15 +43,16 @@ export const getSearchId = () => {
       .getSearchId()
       .then((res) => {
         dispatch({ type: GET_SEARCH_ID, payload: res.searchId });
+        dispatch(getTickets(res.searchId));
       })
       .catch((e) => dispatch(errorDetect(e)));
   };
 };
 
-export const getTickets = (searchId) => {
+export const getTickets = (searchId, offset = 0) => {
   return (dispatch) => {
     aviasalesService
-      .getTicketsPack(searchId)
+      .getTicketsPack(searchId, offset)
       .then((res) => {
         dispatch({ type: GET_TICKETS_PACK, payload: res.tickets });
         if (res.stop) {
