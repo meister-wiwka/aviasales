@@ -42,12 +42,10 @@ export const getSearchId = () => {
     aviasalesService
       .getSearchId()
       .then((res) => {
-        console.log('Полученный searchId:', res.searchId);
         dispatch({ type: GET_SEARCH_ID, payload: res.searchId });
         dispatch(getTickets(res.searchId));
       })
       .catch((e) => {
-        console.error('Ошибка получения searchId:', e);
         dispatch(errorDetect(e));
       });
   };
@@ -60,21 +58,16 @@ export const getTickets = (searchId) => {
       aviasalesService
         .getTicketsPack(searchId)
         .then((res) => {
-          console.log('Полученные билеты с сервера:', res.tickets);
           dispatch({ type: GET_TICKETS_PACK, payload: res.tickets });
 
           if (!res.stop) {
             fetchTickets(searchId);
           } else {
-            console.log('Все билеты загружены');
             dispatch({ type: TICKETS_LOAD });
           }
         })
         .catch((e) => {
-          console.error('Ошибка получения билетов:', e);
-
           if (e.message === '500' && retries > 0) {
-            console.log(`Повторная попытка запроса через 1 секунду. Осталось попыток: ${retries}`);
             setTimeout(() => fetchTickets(searchId, retries - 1), 1000);
           } else {
             dispatch(errorDetect(e));
