@@ -23,6 +23,8 @@ const TicketsList = () => {
 
   const anyFilterSelected = filters.some(filter => filter.selected && filter.name !== 'all');
 
+  console.log('Исходные билеты:', tickets);
+
   const sortedList = (tickets || []).map((ticket) => {
     const transformedTicket = { ...ticket, id: uuidv4() };
     transformedTicket.totalTime = transformedTicket.segments.reduce((total, { duration }) => total + duration, 0);
@@ -48,6 +50,8 @@ const TicketsList = () => {
       </li>
     ));
 
+  console.log('Отсортированные и отфильтрованные билеты:', sortedList);
+
   return error ? (
     <ErrorMessage message={error.message} />
   ) : (
@@ -62,5 +66,6 @@ const TicketsList = () => {
     </>
   );
 };
+
 
 export default TicketsList;

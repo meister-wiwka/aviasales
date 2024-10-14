@@ -42,29 +42,46 @@ export const getSearchId = () => {
     aviasalesService
       .getSearchId()
       .then((res) => {
+        console.log('Полученный searchId:', res.searchId);
         dispatch({ type: GET_SEARCH_ID, payload: res.searchId });
         dispatch(getTickets(res.searchId));
       })
-      .catch((e) => dispatch(errorDetect(e)));
+      .catch((e) => {
+        console.error('Ошибка получения searchId:', e);
+        dispatch(errorDetect(e));
+      });
   };
 };
 
-export const getTickets = (searchId, offset = 0) => {
+
+export const getTickets = (searchId) => {
   return (dispatch) => {
-    aviasalesService
-      .getTicketsPack(searchId, offset)
-      .then((res) => {
-        dispatch({ type: GET_TICKETS_PACK, payload: res.tickets });
-        if (res.stop) {
-          dispatch({ type: TICKETS_LOAD });
-        }
-      })
-      .catch((e) => {
-        if (e.message === '500') {
-          dispatch({ type: GET_TICKETS_PACK, payload: [] });
-        } else {
-          dispatch(errorDetect(e));
-        }
-      });
+    const fetchTickets = (searchId, retries = 3) => {
+      aviasalesService
+        .getTicketsPack(searchId)
+        .then((res) => {
+          console.log('Полученные билеты с сервера:', res.tickets);
+          dispatch({ type: GET_TICKETS_PACK, payload: res.tickets });
+
+          if (!res.stop) {
+            fetchTickets(searchId);
+          } else {
+            console.log('Все билеты загружены');
+            dispatch({ type: TICKETS_LOAD });
+          }
+        })
+        .catch((e) => {
+          console.error('Ошибка получения билетов:', e);
+
+          if (e.message === '500' && retries > 0) {
+            console.log(`Повторная попытка запроса через 1 секунду. Осталось попыток: ${retries}`);
+            setTimeout(() => fetchTickets(searchId, retries - 1), 1000);
+          } else {
+            dispatch(errorDetect(e));
+          }
+        });
+    };
+
+    fetchTickets(searchId);
   };
 };
