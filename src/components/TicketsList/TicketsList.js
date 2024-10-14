@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
-import { getSearchId } from '../../redux/actions'; // Убираем getTickets из импорта
+import { getSearchId } from '../../redux/actions';
 import Ticket from '../Ticket';
 import Buttons from '../Buttons';
 import ErrorMessage from '../ErrorMessage';
